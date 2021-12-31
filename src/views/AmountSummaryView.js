@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import {Card} from 'react-native-paper';
+import {decimalPlacesIfCents} from '../lib/numberHelpers';
 
 import theme from '../lib/theme';
 
@@ -54,8 +55,10 @@ function AmountSummaryView({
   symbol,
   onPress,
 }) {
-  const currentValue = (totalUnits * parseFloat(price)).toFixed(4);
-  const percentage = ((currentValue / totalInvested) * 100 - 100).toFixed(4);
+  const currentValue = decimalPlacesIfCents(totalUnits * parseFloat(price));
+  const percentage = decimalPlacesIfCents(
+    (currentValue / totalInvested) * 100 - 100,
+  );
   const isNegative = percentage < 0;
 
   return (

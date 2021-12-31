@@ -3,6 +3,7 @@ import {View, StyleSheet, Text, ImageBackground} from 'react-native';
 import {Card} from 'react-native-paper';
 
 import cryptoBgImage from '../assets/images/cryptoBg.png';
+import {decimalPlacesIfCents} from '../lib/numberHelpers';
 import theme from '../lib/theme';
 
 const styles = StyleSheet.create({
@@ -50,7 +51,9 @@ const styles = StyleSheet.create({
 });
 
 function HomeHeaderView({currentTotal, totalInvested}) {
-  const percentage = ((currentTotal / totalInvested) * 100 - 100).toFixed(4);
+  const percentage = decimalPlacesIfCents(
+    (currentTotal / totalInvested) * 100 - 100,
+  );
 
   return (
     <ImageBackground source={cryptoBgImage} style={styles.bgImage}>
@@ -59,7 +62,9 @@ function HomeHeaderView({currentTotal, totalInvested}) {
           <View style={styles.column}>
             <Text style={styles.headerLabel}>Invested</Text>
             <View style={styles.amountWrapper}>
-              <Text style={styles.value}>${totalInvested || 0}</Text>
+              <Text style={styles.value}>
+                ${decimalPlacesIfCents(totalInvested, 2) || 0}
+              </Text>
             </View>
           </View>
           <View style={styles.divider} />
@@ -76,7 +81,7 @@ function HomeHeaderView({currentTotal, totalInvested}) {
                         : theme.colors.positive,
                   },
                 ]}>
-                ${currentTotal || 0}
+                ${decimalPlacesIfCents(currentTotal, 2) || 0}
               </Text>
               {!isNaN(percentage) && (
                 <Text

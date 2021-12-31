@@ -1,4 +1,5 @@
 import cacheStorage from './cacheStorage';
+import {decimalPlacesIfCents} from './numberHelpers';
 
 const fetchAndFormatCoinsData = (marketData, savedCoinPairs) => {
   const coinsData = savedCoinPairs?.reduce(async (coinsResult, savedCoin) => {
@@ -26,11 +27,14 @@ const fetchAndFormatCoinsData = (marketData, savedCoinPairs) => {
     );
 
     const currentPrice = parseFloat(price);
-    const currentValue = (coinData?.units * currentPrice).toFixed(2);
-    const percentage = (
-      (currentValue / coinData?.investedPrice) * 100 -
-      100
-    ).toFixed(2);
+    const currentValue = decimalPlacesIfCents(
+      coinData?.units * currentPrice,
+      2,
+    );
+    const percentage = decimalPlacesIfCents(
+      (currentValue / coinData?.investedPrice) * 100 - 100,
+      2,
+    );
 
     const totalInvested = newResult?.totalInvested + coinData?.investedPrice;
     const currentTotal = newResult?.currentTotal + parseFloat(currentValue);
@@ -68,11 +72,12 @@ const fetchAndFormatCoinData = async (coinSymbol, price) => {
 
       const entryUnits =
         parseFloat(entry?.totalPrice) / parseFloat(entry?.unitPrice);
-      const currentEntryValue = (entryUnits * parseFloat(price)).toFixed(4);
-      const entryPercentage = (
-        (currentEntryValue / parseFloat(entry?.totalPrice)) * 100 -
-        100
-      ).toFixed(4);
+      const currentEntryValue = decimalPlacesIfCents(
+        entryUnits * parseFloat(price),
+      );
+      const entryPercentage = decimalPlacesIfCents(
+        (currentEntryValue / parseFloat(entry?.totalPrice)) * 100 - 100,
+      );
 
       const formattedEntry = {
         ...entry,
